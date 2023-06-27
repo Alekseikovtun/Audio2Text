@@ -7,9 +7,10 @@ import config.env_config as env_cfg
 token = env_cfg.token
 bot = telebot.TeleBot(token)
 
+
 @bot.message_handler(commands=['start'])
 def say_hi(message):
-    bot.send_message(message.chat.id, 'Привет, ' + message.chat.first_name)
+    bot.send_message(message.chat.id, 'Hi ' + message.chat.first_name)
 
 
 def oga2wav(filename):
@@ -30,11 +31,12 @@ def recognize_speech(oga_filename):
 
     if os.path.exists(oga_filename):
         os.remove(oga_filename)
-    
+
     if os.path.exists(wav_filename):
         os.remove(wav_filename)
-    
+
     return text
+
 
 def download_file(bot, file_id):
     file_info = bot.get_file(file_id)
@@ -46,10 +48,12 @@ def download_file(bot, file_id):
         file.write(downloaded_file)
     return filename
 
+
 @bot.message_handler(content_types=['voice'])
 def transcript(message):
     filename = download_file(bot, message.voice.file_id)
     text = recognize_speech(filename)
     bot.send_message(message.chat.id, text)
+
 
 bot.polling()
